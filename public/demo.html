@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Widget — Custom Channel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Plus Jakarta Sans", system-ui, sans-serif; color: #171a2e; background: #f6f7fb; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 6vw; }
+    .logo { font-weight: 800; font-size: 20px; letter-spacing: -.02em; }
+    .logo span { color: #7c5cff; }
+    nav a { margin-left: 22px; color: #555b70; text-decoration: none; font-weight: 600; font-size: 14px; }
+    .hero { padding: 9vh 6vw 6vh; max-width: 860px; }
+    .hero h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; letter-spacing: -.03em; margin: 0 0 18px; }
+    .hero p { font-size: 18px; color: #555b70; line-height: 1.6; max-width: 620px; }
+    .cta { display: inline-block; margin-top: 18px; padding: 14px 22px; border-radius: 14px; background: #171a2e; color: #fff; font-weight: 700; text-decoration: none; cursor: pointer; border: 0; font-size: 15px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; padding: 0 6vw 12vh; }
+    .card { background: #fff; border-radius: 20px; padding: 22px; box-shadow: 0 10px 30px rgba(20, 20, 60, .06); }
+    .card h3 { margin: 0 0 8px; }
+    .card p { margin: 0; color: #555b70; line-height: 1.55; font-size: 14.5px; }
+    code { background: #eceefe; padding: 2px 6px; border-radius: 6px; font-size: 13px; }
+    pre { background: #171a2e; color: #e5e7ff; padding: 16px; border-radius: 14px; overflow-x: auto; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Contoh<span>Brand</span></div>
+    <nav><a href="#">Produk</a><a href="#">Harga</a><a href="#">Kontak</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>Halaman contoh dengan live chat widget.</h1>
+    <p>Ini halaman dummy untuk demo. Klik tombol chat di pojok kanan bawah: pesannya masuk ke inbox Custom API di Cekat, dan balasan agent/AI muncul langsung di widget.</p>
+    <button class="cta" onclick="CekatChat.open()">Tanya sekarang →</button>
+  </section>
+
+  <section class="grid">
+    <div class="card"><h3>1 baris kode</h3><p>Tempel <code>&lt;script src=".../widget.js"&gt;</code> di website mana pun.</p></div>
+    <div class="card"><h3>AI + agent</h3><p>Semua percakapan masuk ke Cekat, dibalas AI agent atau tim CS.</p></div>
+    <div class="card"><h3>Kirim file</h3><p>Pengunjung bisa kirim gambar &amp; dokumen (via Vercel Blob).</p></div>
+    <div class="card"><h3>Notifikasi</h3><p>Badge unread, preview pesan, dan suara saat ada balasan.</p></div>
+  </section>
+
+  <section class="grid" style="padding-top:0">
+    <div class="card" style="grid-column:1/-1">
+      <h3>Kode embed</h3>
+      <pre id="snippet"></pre>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('snippet').textContent =
+      '<script src="' + location.origin + '/widget.js"\n        data-color="#7c5cff"\n        data-position="right"\n        data-label="Chat dengan kami"\n        async><\/script>';
+  </script>
+  <script src="/widget.js" data-color="#7c5cff" data-position="right" data-label="Chat dengan kami" async></script>
+</body>
+</html>

@@ -5,7 +5,7 @@ const REDIS_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_
 const REDIS_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const TTL_SECONDS = 60 * 60 * 24 * 7; // keep chat history 7 days
 
-async function redis(...args) {
+export async function redis(...args) {
   if (!REDIS_URL || !REDIS_TOKEN) {
     throw new Error('Redis is not configured (set KV_REST_API_URL and KV_REST_API_TOKEN)');
   }
@@ -44,9 +44,30 @@ export async function markSeen(messageId) {
   return res === 'OK';
 }
 
+// Fixed-window rate limiter. Returns true if allowed.
+export async function rateLimit(bucket, limit, windowSec = 60) {
+  const k = `cekat:rl:${bucket}:${Math.floor(Date.now() / 1000 / windowSec)}`;
+  const n = await redis('INCR', k);
+  if (n === 1) await redis('EXPIRE', k, windowSec + 5);
+  return n <= limit;
+}
+
+export function clientIp(req) {
+  const xf = String(req.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+  return xf || req.headers?.['x-real-ip'] || req.socket?.remoteAddress || 'unknown';
+}
+
 export function clean(value, max) {
   if (value === undefined || value === null) return '';
   return String(value).trim().slice(0, max);
 }
 
+export function parseBody(req) {
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body); } catch { return {}; }
+  }
+  return req.body || {};
+}
+
 export const SENDER_ID_RE = /^[A-Za-z0-9_\-:.]{6,128}$/;
+export const MEDIA_TYPES = ['text', 'image', 'video', 'audio', 'document', 'file'];

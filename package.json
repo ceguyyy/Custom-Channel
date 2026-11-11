@@ -1,11 +1,14 @@
 {
-  "name": "cekat-vercel-chat",
-  "version": "1.0.0",
+  "name": "custom-channel",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Web chat (HTML/CSS/JS) + Cekat Custom API proxy + agent-reply webhook, for Vercel",
+  "description": "Glassmorphism web chat + embeddable widget for the Cekat Custom API inbox, with agent-reply webhook, on Vercel",
   "scripts": {
     "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.9.0"
   },
   "engines": {
     "node": ">=18"

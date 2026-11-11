@@ -1,58 +1,106 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b1a" />
   <title>Live Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <main class="chat" aria-live="polite">
+  <div class="bg" aria-hidden="true">
+    <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+    <span class="grain"></span>
+  </div>
+
+  <main class="chat glass" id="chat">
     <header class="chat__header">
-      <div class="avatar" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6.1L5.5 21l4-2.2c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8Z"/></svg>
-      </div>
+      <div class="avatar" id="avatar" aria-hidden="true"></div>
       <div class="chat__title">
-        <h1 id="title">Customer Support</h1>
-        <p id="subtitle"><span class="dot"></span> Online</p>
+        <h1 id="brandName">Customer Support</h1>
+        <p class="status" id="status"><span class="dot"></span><span id="statusText">Online</span></p>
       </div>
-      <button id="resetBtn" class="icon-btn" title="Mulai percakapan baru" aria-label="Mulai percakapan baru" hidden>
-        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>
-      </button>
+      <div class="actions">
+        <button id="soundBtn" class="icon-btn" type="button" title="Suara notifikasi" aria-label="Suara notifikasi" aria-pressed="true">
+          <svg class="i-on" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <svg class="i-off" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+        </button>
+        <button id="themeBtn" class="icon-btn" type="button" title="Ganti tema" aria-label="Ganti tema">
+          <svg class="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button id="resetBtn" class="icon-btn" type="button" title="Mulai percakapan baru" aria-label="Mulai percakapan baru" hidden>
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button id="closeBtn" class="icon-btn" type="button" title="Tutup" aria-label="Tutup chat" hidden>
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
     </header>
 
-    <!-- Step 1: identify the visitor -->
+    <!-- Pre-chat form -->
     <section id="onboarding" class="onboarding">
-      <h2>Halo! 👋</h2>
-      <p>Isi nama Anda untuk mulai chat dengan tim kami.</p>
-      <form id="startForm" autocomplete="on">
-        <label>Nama <span class="req">*</span>
-          <input name="name" required maxlength="100" placeholder="Nama lengkap" />
+      <div class="hero">
+        <div class="hero__badge">💬 Live chat</div>
+        <h2 id="heroTitle">Halo! 👋</h2>
+        <p id="heroText">Isi data singkat di bawah untuk mulai ngobrol dengan tim kami.</p>
+      </div>
+      <form id="startForm" class="form glass-soft" autocomplete="on" novalidate>
+        <label class="field">
+          <span>Nama <b class="req">*</b></span>
+          <input name="name" required maxlength="100" placeholder="Nama lengkap" autocomplete="name" />
         </label>
-        <label>No. WhatsApp <span class="opt">(opsional)</span>
-          <input name="phone" type="tel" maxlength="30" placeholder="08xxxxxxxxxx" />
+        <label class="field">
+          <span>No. WhatsApp <em id="phoneHint" class="opt">(opsional)</em></span>
+          <input name="phone" type="tel" maxlength="30" placeholder="08xxxxxxxxxx" autocomplete="tel" />
         </label>
-        <label>Email <span class="opt">(opsional)</span>
-          <input name="email" type="email" maxlength="200" placeholder="nama@email.com" />
+        <label class="field">
+          <span>Email <em id="emailHint" class="opt">(opsional)</em></span>
+          <input name="email" type="email" maxlength="200" placeholder="nama@email.com" autocomplete="email" />
         </label>
-        <button type="submit" class="btn-primary">Mulai Chat</button>
+        <p id="formError" class="form__error" role="alert" hidden></p>
+        <button type="submit" class="btn-primary">
+          Mulai Chat
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="privacy">Data Anda hanya digunakan untuk membalas percakapan ini.</p>
       </form>
     </section>
 
-    <!-- Step 2: conversation -->
-    <section id="messages" class="messages" hidden></section>
+    <!-- Conversation -->
+    <section id="messages" class="messages" hidden aria-live="polite"></section>
 
-    <div id="typing" class="typing" hidden>
-      <span></span><span></span><span></span>
-    </div>
+    <div id="newPill" class="new-pill" hidden>Pesan baru ↓</div>
+
+    <div id="quick" class="quick" hidden></div>
 
     <form id="composer" class="composer" hidden>
-      <textarea id="input" rows="1" maxlength="4000" placeholder="Tulis pesan…" aria-label="Tulis pesan"></textarea>
+      <div class="composer__box glass-soft">
+        <button id="emojiBtn" class="icon-btn sm" type="button" title="Emoji" aria-label="Emoji">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
+        </button>
+        <textarea id="input" rows="1" maxlength="4000" placeholder="Tulis pesan…" aria-label="Tulis pesan"></textarea>
+        <button id="attachBtn" class="icon-btn sm" type="button" title="Kirim gambar / dokumen" aria-label="Lampirkan file" hidden>
+          <svg viewBox="0 0 24 24"><path d="m21 11-8.6 8.6a5 5 0 0 1-7-7l8.5-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>
+        </button>
+        <input id="file" type="file" hidden
+          accept="image/jpeg,image/png,image/webp,image/gif,application/pdf,.doc,.docx,.xls,.xlsx,.txt" />
+      </div>
       <button id="sendBtn" type="submit" class="send-btn" aria-label="Kirim">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></svg>
       </button>
     </form>
+
+    <div id="emojiPop" class="emoji-pop glass" hidden></div>
+    <div id="dropzone" class="dropzone" hidden><div>📎<br />Lepas file untuk mengirim</div></div>
+    <footer class="powered">Powered by <a href="https://cekat.ai" target="_blank" rel="noopener">Cekat AI</a></footer>
   </main>
+
+  <div id="lightbox" class="lightbox" hidden><img alt="Pratinjau gambar" /></div>
+  <div id="toast" class="toast glass" role="status" hidden></div>
 
   <script src="/app.js" defer></script>
 </body>
