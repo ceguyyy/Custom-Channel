@@ -27,15 +27,19 @@ export default async function handler(req, res) {
   const phone = clean(b.sender_phone, 30);
   if (email) payload.sender_email = email;
   if (phone) payload.sender_phone = phone;
-  if (b.additional_data) payload.additional_data = JSON.stringify(b.additional_data).slice(0, 4000);
+  // Cekat stores additional_data as JSONB and expects an OBJECT (a JSON string causes
+  // "cannot delete from scalar"). Only send a small flat object of strings.
+  const extra = toFlatObject(b.additional_data);
+  if (extra) payload.additional_data = extra;
 
   try {
-    const r = await fetch(CEKAT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', api_key: CEKAT_API_KEY },
-      body: JSON.stringify(payload),
-    });
-    const j = await r.json().catch(() => ({}));
+    let { r, j } = await postCekat(payload, CEKAT_API_KEY);
+    // Fallback: if Cekat still rejects additional_data, retry once without it.
+    if ((!r.ok || j.success === false) && payload.additional_data) {
+      console.warn('Cekat rejected payload, retrying without additional_data:', j.message || j.error || r.status);
+      delete payload.additional_data;
+      ({ r, j } = await postCekat(payload, CEKAT_API_KEY));
+    }
     if (!r.ok || j.success === false) {
       return res.status(502).json({ ok: false, error: j.message || j.error || `Cekat HTTP ${r.status}` });
     }
@@ -59,6 +63,27 @@ export default async function handler(req, res) {
     console.error('send error', err);
     return res.status(500).json({ ok: false, error: err.message || 'Internal error' });
   }
+}
+
+async function postCekat(payload, apiKey) {
+  const r = await fetch(CEKAT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', api_key: apiKey },
+    body: JSON.stringify(payload),
+  });
+  const j = await r.json().catch(() => ({}));
+  return { r, j };
+}
+
+function toFlatObject(v) {
+  if (typeof v === 'string') v = safeJson(v);
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+  const out = {};
+  for (const [k, val] of Object.entries(v).slice(0, 20)) {
+    if (val === undefined || val === null) continue;
+    out[String(k).slice(0, 50)] = String(val).slice(0, 500);
+  }
+  return Object.keys(out).length ? out : null;
 }
 
 function safeJson(s) {
