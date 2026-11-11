@@ -1,0 +1,13 @@
+{
+  "name": "cekat-vercel-chat",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web chat (HTML/CSS/JS) + Cekat Custom API proxy + agent-reply webhook, for Vercel",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

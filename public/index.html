@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Live Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="chat" aria-live="polite">
+    <header class="chat__header">
+      <div class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6.1L5.5 21l4-2.2c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8s-4-8-9-8Z"/></svg>
+      </div>
+      <div class="chat__title">
+        <h1 id="title">Customer Support</h1>
+        <p id="subtitle"><span class="dot"></span> Online</p>
+      </div>
+      <button id="resetBtn" class="icon-btn" title="Mulai percakapan baru" aria-label="Mulai percakapan baru" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>
+      </button>
+    </header>
+
+    <!-- Step 1: identify the visitor -->
+    <section id="onboarding" class="onboarding">
+      <h2>Halo! 👋</h2>
+      <p>Isi nama Anda untuk mulai chat dengan tim kami.</p>
+      <form id="startForm" autocomplete="on">
+        <label>Nama <span class="req">*</span>
+          <input name="name" required maxlength="100" placeholder="Nama lengkap" />
+        </label>
+        <label>No. WhatsApp <span class="opt">(opsional)</span>
+          <input name="phone" type="tel" maxlength="30" placeholder="08xxxxxxxxxx" />
+        </label>
+        <label>Email <span class="opt">(opsional)</span>
+          <input name="email" type="email" maxlength="200" placeholder="nama@email.com" />
+        </label>
+        <button type="submit" class="btn-primary">Mulai Chat</button>
+      </form>
+    </section>
+
+    <!-- Step 2: conversation -->
+    <section id="messages" class="messages" hidden></section>
+
+    <div id="typing" class="typing" hidden>
+      <span></span><span></span><span></span>
+    </div>
+
+    <form id="composer" class="composer" hidden>
+      <textarea id="input" rows="1" maxlength="4000" placeholder="Tulis pesan…" aria-label="Tulis pesan"></textarea>
+      <button id="sendBtn" type="submit" class="send-btn" aria-label="Kirim">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+      </button>
+    </form>
+  </main>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
